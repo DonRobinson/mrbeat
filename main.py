@@ -11,7 +11,7 @@ from kivy.uix.button import Button
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.widget import Widget
-from audiostream import get_output
+# from audiostream import get_output
 from audio_engine import AudioEngine
 from sound_kit_service import SoundKitService
 from track import TrackWidget

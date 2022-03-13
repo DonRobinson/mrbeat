@@ -1,6 +1,7 @@
 from array import array
 
-from audiostream.sources.thread import ThreadSource
+# from audiostream.sources.thread import ThreadSource
+import pyaudio
 
 from audio_source_track import AudioSourceTrack
 
@@ -17,7 +18,7 @@ def sum_16bits(n):
     return s
 
 
-class AudioSourceMixer(ThreadSource):
+class AudioSourceMixer(pyaudio.Stream):     # ThreadSource):
     buf = None
 
     # AudioSourceMixer
@@ -30,11 +31,13 @@ class AudioSourceMixer(ThreadSource):
     #           loop on our tracks
     #               buffers = track.get_bytes
 
-    def __init__(self, output_stream, all_wav_samples, bpm, sample_rate, nb_steps, on_current_step_changed, min_bpm, *args, **kwargs):
-        ThreadSource.__init__(self, output_stream, *args, **kwargs)
+    def __init__(self, output_stream, p_manager, all_wav_samples, bpm, sample_rate, nb_steps, on_current_step_changed, min_bpm, *args, **kwargs):
+        # ThreadSource.__init__(self, output_stream, *args, **kwargs)
+        super().__init__(p_manager, 44100, 1, pyaudio.paInt16, input=False, output=True, *args, **kwargs)
         self.tracks = []
         for i in range(0, len(all_wav_samples)):
-            track = AudioSourceTrack(output_stream, all_wav_samples[i], bpm, sample_rate, min_bpm)
+            p = pyaudio.PyAudio()
+            track = AudioSourceTrack(output_stream, p, all_wav_samples[i], bpm, sample_rate, min_bpm)
             track.set_steps((0,)*nb_steps)
             self.tracks.append(track)
 

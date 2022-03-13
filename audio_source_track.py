@@ -1,14 +1,16 @@
 from array import array
-
-from audiostream.sources.thread import ThreadSource
+import pyaudio
+from scratch_ThreadSource import ThreadSource
+# from audiostream.sources.thread import ThreadSource
 
 
 class AudioSourceTrack(ThreadSource):
     steps = ()
     step_nb_samples = 0
 
-    def __init__(self, output_stream, wav_samples, bpm, sample_rate, min_bpm,  *args, **kwargs):
-        super().__init__(output_stream, *args, **kwargs)        # This code is different to course code
+    def __init__(self, output_stream, p_manager, wav_samples, bpm, sample_rate, min_bpm,  *args, **kwargs):
+        # super().__init__(p_manager, 44100, 1, pyaudio.paInt16, input=False, output=True, *args, **kwargs)
+        ThreadSource.__init__(self, output_stream, *args, **kwargs)
         self.current_sample_index = 0
         self.current_step_index = 0
         self.wav_samples = wav_samples

@@ -17,7 +17,8 @@ class Sound:
         wave_file = wave.open(self.filename, 'rb')
         nb_samples = wave_file.getnframes()
         frames = wave_file.readframes(nb_samples)
-        self.samples = array('h', frames)
+        self.samples = frames   # Just use bytes instead of an array of integers. Works with pyaudio
+        # self.samples = array('h', frames)
 
 
 class SoundKit:
