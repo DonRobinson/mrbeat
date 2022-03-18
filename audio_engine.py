@@ -21,10 +21,12 @@ class AudioEngine:
         self.output_stream = self.p.open(format=self.FORMAT,
                                          channels=self.NB_CHANNELS,
                                          rate=self.SAMPLE_RATE,
+                                         frames_per_buffer=self.BUFFER_SIZE,
                                          output=True)
 
-        self.audio_source_one_shot = AudioSourceOneShot()  # self.output_stream)
-        self.audio_source_one_shot.start_stream()
+        self.audio_source_one_shot = AudioSourceOneShot(self.output_stream)
+        self.audio_source_one_shot.start()
+        # self.audio_source_one_shot.start_stream() # Don't start the stream, start the thread (in ThreadSource
 
     def play_sound(self, wav_samples):
         self.audio_source_one_shot.set_wav_samples(wav_samples)
@@ -32,14 +34,14 @@ class AudioEngine:
     def create_track(self, wav_samples, bpm):
         source_track = AudioSourceTrack(self.output_stream, wav_samples, bpm, self.SAMPLE_RATE)
         # source_track.set_steps((1, 0, 0, 0))
-        source_track.start_stream()
+        source_track.start()
         return source_track
 
     def create_mixer(self, all_wav_samples, bpm, nb_steps, on_current_step_changed, min_bpm):
         p = pyaudio.PyAudio()
         mixer = AudioSourceMixer(self.output_stream, p, all_wav_samples, bpm, self.SAMPLE_RATE, nb_steps,
                                  on_current_step_changed, min_bpm)
-        mixer.start_stream()
+        mixer.start()
         return mixer
         # create the audio source mixer
         # start it

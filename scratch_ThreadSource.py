@@ -6,6 +6,8 @@ from pyaudio import  *
 
 # from audiostream.core import AudioSample
 
+    # Only include code for thread in ThreadSource of now. Omit "stream" code.
+
 ''' This is the ThreadSource file from audiostream. I could modify it to work with
     this project which uses PyAudio. If not, I need to change:
     1. get_bytes to the code that gets the bytes - which could be just the bytes passed to the function
@@ -14,24 +16,27 @@ from pyaudio import  *
     4. It could be a good idea to use it, because it is derived from Thread and so can be used to wait etc 
     to make the program threadsafe.'''
 
+
 class ThreadSource(Thread):
     def __init__(self, stream):
         Thread.__init__(self)
+        self.sample = None
         self.daemon = True
-        self.buffersize = stream.buffersize
+        self.stream = stream
+        '''self.buffersize = stream.buffersize
         self.channels = stream.channels
         self.rate = stream.rate
         # self.sample = AudioSample()
-        stream.add_sample(self.sample)
+        stream.add_sample(self.sample)'''
 
     def get_bytes(self):
-        return ''
+        return 'hello'
 
     def run(self):
-        self.sample.play()
+        self.stream.start_stream()
         while True:
-            self.sample.write(self.get_bytes())
+            self.stream.write(self.get_bytes())
 
     def stop(self):
-        self.sample.stop()
+        self.stream.close()
 

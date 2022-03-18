@@ -7,7 +7,7 @@ from kivy.uix.image import Image
 from kivy.uix.togglebutton import ToggleButton
 
 
-Builder.load_file("track.kv")
+# Builder.load_file("track.kv")
 
 
 class TrackStepButton(ToggleButton):

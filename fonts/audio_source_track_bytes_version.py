@@ -1,6 +1,6 @@
 from array import array
-import pyaudio
-from scratch_ThreadSource import ThreadSource
+
+from audiostream.sources.thread import ThreadSource
 
 
 class AudioSourceOneShot(ThreadSource):
@@ -14,8 +14,7 @@ class AudioSourceOneShot(ThreadSource):
         self.buf = array('h', b"\x00\x00" * self.chunk_nb_samples)
 
     def set_wav_samples(self, wav_samples):
-        # self.wav_samples = array('h', wav_samples)
-        self.stream.write(wav_samples)
+        self.wav_samples = wav_samples
         self.current_sample_index = 0
         self.nb_wav_samples = len(wav_samples)
 

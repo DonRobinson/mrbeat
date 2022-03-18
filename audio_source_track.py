@@ -9,7 +9,6 @@ class AudioSourceTrack(ThreadSource):
     step_nb_samples = 0
 
     def __init__(self, output_stream, p_manager, wav_samples, bpm, sample_rate, min_bpm,  *args, **kwargs):
-        # super().__init__(p_manager, 44100, 1, pyaudio.paInt16, input=False, output=True, *args, **kwargs)
         ThreadSource.__init__(self, output_stream, *args, **kwargs)
         self.current_sample_index = 0
         self.current_step_index = 0
@@ -22,7 +21,8 @@ class AudioSourceTrack(ThreadSource):
 
         self.step_nb_samples = self.compute_step_nb_samples(bpm)
         self.buffer_nb_samples = self.compute_step_nb_samples(min_bpm)
-        self.silence = array('h', b"\x00\x00" * self.step_nb_samples)
+        # self.silence = array('h', b"\x00\x00" * self.step_nb_samples)
+        self.silence = b'\x00\x00' * self.step_nb_samples
 
     def set_steps(self, steps):
         if not len(steps) == len(self.steps):
@@ -83,7 +83,8 @@ class AudioSourceTrack(ThreadSource):
                 # 3.3 - We have some remaining samples to play but fewer than 1 step
                 silence_nb_samples = self.step_nb_samples - self.nb_wav_samples + index
                 result_buf = self.wav_samples[index:self.nb_wav_samples]
-                result_buf.extend(self.silence[0:silence_nb_samples])
+                result_buf += self.silence[0:silence_nb_samples]
+                # result_buf.extend(self.silence[0:silence_nb_samples]) <<< AttributeError: 'bytes' object has no attribute 'extend'
 
         self.current_sample_index += self.step_nb_samples
 
